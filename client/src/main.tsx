@@ -10,10 +10,14 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import CssBaseline from '@mui/material/CssBaseline';
 
 const queryClient = new QueryClient();
 
 let theme = createTheme({
+  palette: {
+    mode: 'dark'
+  },
   typography: {
     h1: {
       fontSize: '3.3rem'
@@ -40,6 +44,7 @@ theme = responsiveFontSizes(theme);
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <QueryClientProvider client={queryClient}>
           <App />

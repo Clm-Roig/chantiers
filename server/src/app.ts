@@ -14,6 +14,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
+// Simulate slow traffic
+app.use(function (req, res, next) {
+  setTimeout(next, 1500);
+});
+
 // ========== ROUTES
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to chantiers application.' });

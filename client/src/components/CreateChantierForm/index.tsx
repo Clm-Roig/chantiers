@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Button,
   FormControl,
   FormHelperText,
@@ -6,10 +7,13 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography
+  Typography,
+  Alert,
+  Stack
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { DatePicker } from '@mui/x-date-pickers';
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import createChantier from '../../api/createChantier';
@@ -28,18 +32,26 @@ function CreateChantierForm() {
     defaultValues
   });
 
-  const { mutate: doCreateChantier } = useMutation(createChantier);
+  const { isLoading, isSuccess, mutate: doCreateChantier } = useMutation(createChantier);
+
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+    }
+  }, [isSuccess]);
 
   const onSubmit = (data: any) => {
     doCreateChantier(data as Chantier);
-    reset();
   };
 
   const onReset = () => reset();
 
   return (
-    <>
+    <Stack spacing={2}>
       <Typography variant="h2">Créer un chantier</Typography>
+
+      {isSuccess && <Alert severity="success">Chantier créé !</Alert>}
+
       <form>
         <Box display="flex" width="100%" gap={2} flexWrap="wrap" justifyContent="center">
           <Controller
@@ -122,14 +134,22 @@ function CreateChantierForm() {
             )}
           />
           <Box>
-            <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
-            <Button onClick={onReset} variant={'outlined'}>
-              Reset
-            </Button>
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <>
+                <Button disabled={isLoading} onClick={handleSubmit(onSubmit)}>
+                  Créer
+                </Button>
+                <Button disabled={isLoading} onClick={onReset} variant={'outlined'}>
+                  Réinitialiser
+                </Button>
+              </>
+            )}
           </Box>
         </Box>
       </form>
-    </>
+    </Stack>
   );
 }
 
