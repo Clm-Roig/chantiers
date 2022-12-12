@@ -1,12 +1,15 @@
-import { Typography } from '@mui/material';
-
+import { Card, CardContent, CardHeader, Divider } from '@mui/material';
+import CreateChantierForm from './components/CreateChantierForm';
 function App() {
   return (
     <div>
-      <h1>Chantiers</h1>
-      <Typography>
-        Edit <code>src/App.tsx</code> and save to test HMR
-      </Typography>
+      <Card>
+        <CardHeader title="Mes Chantiers" />
+        <CardContent>
+          <CreateChantierForm />
+          <Divider />
+        </CardContent>
+      </Card>
     </div>
   );
 }

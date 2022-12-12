@@ -9,7 +9,7 @@ const app = express();
 
 // ========== APP config
 const corsOptions = {
-  origin: 'http://localhost:8081'
+  origin: 'http://127.0.0.1:5173'
 };
 app.use(cors(corsOptions));
 app.use(bodyParser.json());

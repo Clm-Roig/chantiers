@@ -5,6 +5,7 @@
     "target": "es2022",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "strictNullChecks": true
   }
 }
