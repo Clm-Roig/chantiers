@@ -10,6 +10,7 @@ See [/client README](https://github.com/Clm-Roig/chantiers/blob/main/client/READ
 
 ## Client
 - React
+- Vite
 - TypeScript
 - react-hook-form
 - react-query
