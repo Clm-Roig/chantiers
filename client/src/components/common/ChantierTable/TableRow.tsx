@@ -23,7 +23,7 @@ function TableRow({ chantier, handleRowClick, isSelected }: Props) {
       tabIndex={-1}
       selected={isSelected(chantier._id)}>
       <TableCell>{chantier.name}</TableCell>
-      <TableCell>{chantier.description}</TableCell>
+      <TableCell sx={{ whiteSpace: 'pre-wrap' }}>{chantier.description}</TableCell>
       <TableCell>{new Date(chantier.date).toLocaleDateString()}</TableCell>
       <TableCell>{chantier.type}</TableCell>
     </MuiTableRow>
