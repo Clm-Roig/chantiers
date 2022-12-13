@@ -1,9 +1,22 @@
 import { Request, Response } from 'express';
 import Chantier from '../models/Chantier';
 
-export const getChantiers = (req: Request, res: Response) => {
+const MAX_LIMIT = 100;
+
+export const getChantiers = async (req: Request, res: Response) => {
+  const sortString = `${req.params.sortOrder === 'asc' ? '' : '-'}${req.params.sortBy}}`;
+  const page = Number(req.params.page) || 0;
+  const limit = Math.min(MAX_LIMIT, Number(req.params.limit)) || 20;
+
   Chantier.find({})
-    .then((result) => res.status(200).json({ result }))
+    .limit(limit)
+    .sort(sortString)
+    .skip(page * limit)
+    .then(async (result) => {
+      const total = await Chantier.count();
+      res.set('X-Total-Count', total + '');
+      res.status(200).json({ chantiers: result });
+    })
     .catch((error) => res.status(500).json({ msg: error }));
 };
 

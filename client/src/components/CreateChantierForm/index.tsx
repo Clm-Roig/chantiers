@@ -20,7 +20,7 @@ import createChantier from '../../api/createChantier';
 import Chantier from '../../models/Chantier';
 import ChantierType from '../../models/ChantierType';
 
-const defaultValues: Chantier = {
+const defaultValues: Omit<Chantier, '_id'> = {
   description: '',
   name: '',
   date: new Date(),
@@ -39,7 +39,7 @@ function CreateChantierForm() {
     isSuccess,
     isError,
     mutate: doCreateChantier
-  } = useMutation<string, Error, Chantier>(['createchantier'], createChantier);
+  } = useMutation<string, Error, Chantier>(['createChantier'], createChantier);
 
   useEffect(() => {
     if (isSuccess) {
