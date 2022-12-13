@@ -13,10 +13,3 @@
 Launch the app:
 
 `npm run dev`
-
-## Built using
-
-- React
-- Vite
-- react-query
-- react-hook-form
