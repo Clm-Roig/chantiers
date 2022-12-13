@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Order } from '../config/constants';
 import Chantier from '../models/Chantier';
 
 const MAX_LIMIT = 100;
@@ -8,7 +9,7 @@ export const getChantiers = async (req: Request, res: Response) => {
     ? req.query.sortBy
     : 'date';
 
-  const sortString = `${req.query.sortOrder === 'desc' ? '-' : ''}${sortBy}`;
+  const sortString = `${req.query.sortOrder === Order.DESC ? '-' : ''}${sortBy}`;
   const page = Number(req.query.page) || 0;
   const limit = Math.min(MAX_LIMIT, Number(req.query.limit)) || 20;
 

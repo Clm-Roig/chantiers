@@ -1,5 +1,6 @@
-import { Request, Response, Router } from 'express';
-import { body, validationResult } from 'express-validator';
+import { Router } from 'express';
+import { body, query } from 'express-validator';
+import { Order } from '../config/constants';
 const router = Router();
 import {
   getChantiers,
@@ -9,8 +10,17 @@ import {
   deleteChantier
 } from '../controllers/chantiers';
 import validateParams from '../helpers/validateParams';
+import Chantier from '../models/Chantier';
 
-router.get('/', getChantiers);
+router.get(
+  '/',
+  query('sortOrder').isIn(Object.values(Order)),
+  query('sortBy').isIn(Object.keys(Chantier.schema.paths)),
+  query('page').isInt({ min: 0 }),
+  query('limit').isInt({ min: 0 }),
+  validateParams,
+  getChantiers
+);
 
 router.get('/:chantierId', getChantier);
 
