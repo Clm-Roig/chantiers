@@ -5,6 +5,7 @@ import ChantierForm from '../common/ChantierForm';
 import deleteChantier from '../../api/deleteChantiers';
 import { useMutation } from 'react-query';
 import { useEffect } from 'react';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   chantier: Chantier;
@@ -13,6 +14,7 @@ interface Props {
 }
 
 function EditChantier({ chantier, onEditSuccess, onDeleteSuccess }: Props) {
+  const { enqueueSnackbar } = useSnackbar();
   const {
     data: successMessage,
     error,
@@ -20,16 +22,22 @@ function EditChantier({ chantier, onEditSuccess, onDeleteSuccess }: Props) {
     isSuccess,
     isError,
     mutate: doDelete
-  } = useMutation<string, Error, Chantier['_id']>(['deleteChantier'], deleteChantier);
+  } = useMutation<string, Error, Chantier>(['deleteChantier'], deleteChantier);
 
   useEffect(() => {
-    if (isSuccess && onDeleteSuccess) {
-      onDeleteSuccess();
+    if (isSuccess) {
+      enqueueSnackbar(successMessage, { variant: 'success' });
+      if (onDeleteSuccess) {
+        onDeleteSuccess();
+      }
     }
-  }, [isSuccess]);
+    if (isError) {
+      enqueueSnackbar(error?.message, { variant: 'error' });
+    }
+  }, [isSuccess, isError, error, successMessage, enqueueSnackbar, onDeleteSuccess]);
 
   const handleOnDelete = () => {
-    doDelete(chantier._id);
+    doDelete(chantier);
   };
   return (
     <Stack spacing={2}>

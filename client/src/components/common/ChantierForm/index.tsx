@@ -8,7 +8,6 @@ import {
   Select,
   TextField
 } from '@mui/material';
-import SuccessErrorAlert from '../SuccessErrorAlert';
 import { Box } from '@mui/system';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useEffect } from 'react';
@@ -18,6 +17,7 @@ import createChantier from '../../../api/createChantier';
 import Chantier from '../../../models/Chantier';
 import ChantierType from '../../../models/ChantierType';
 import editChantier from '../../../api/editChantier';
+import { useSnackbar } from 'notistack';
 
 type ChantierFormDefaultValues = Omit<Chantier, '_id'>;
 
@@ -35,6 +35,7 @@ interface Props {
 
 function ChantierForm({ defaultValues, onSuccess }: Props) {
   const isEditing = !!defaultValues;
+  const { enqueueSnackbar } = useSnackbar();
   const {
     control,
     handleSubmit,
@@ -55,6 +56,16 @@ function ChantierForm({ defaultValues, onSuccess }: Props) {
     [isEditing ? 'editChantier' : 'createChantier'],
     isEditing ? editChantier : createChantier
   );
+
+  // Display alert if something changes
+  useEffect(() => {
+    if (isSuccess) {
+      enqueueSnackbar(successMessage, { variant: 'success' });
+    }
+    if (isError) {
+      enqueueSnackbar(error?.message, { variant: 'error' });
+    }
+  }, [isSuccess, isError, successMessage, error]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -170,13 +181,6 @@ function ChantierForm({ defaultValues, onSuccess }: Props) {
           </Box>
         </Box>
       </form>
-
-      <SuccessErrorAlert
-        isSuccess={isSuccess}
-        isError={isError}
-        successMessage={successMessage}
-        errorMessage={error?.message}
-      />
     </>
   );
 }
