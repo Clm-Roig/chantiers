@@ -1,7 +1,7 @@
 import { Box, TableHead as MuiTableHead, TableCell, TableRow, TableSortLabel } from '@mui/material';
 import { MouseEvent } from 'react';
 import { visuallyHidden } from '@mui/utils';
-import Chantier from '../../models/Chantier';
+import Chantier from '../../../models/Chantier';
 
 type Order = 'asc' | 'desc';
 

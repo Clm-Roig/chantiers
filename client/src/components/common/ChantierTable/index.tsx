@@ -1,4 +1,4 @@
-import { useState, MouseEvent, ChangeEvent, useEffect } from 'react';
+import { MouseEvent, ChangeEvent } from 'react';
 import {
   Box,
   CircularProgress,
@@ -10,49 +10,51 @@ import {
   TableRow
 } from '@mui/material';
 import TableHead from './TableHead';
-import { useQuery } from 'react-query';
-import getChantiers, { ChantiersAndTotal, PaginateParameters } from '../../api/getChantiers';
-import Chantier from '../../models/Chantier';
+import Chantier from '../../../models/Chantier';
 import Alert from '@mui/material/Alert';
 import Skeleton from '@mui/material/Skeleton';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
-type Order = 'asc' | 'desc';
+export type Order = 'asc' | 'desc';
 
 interface Props {
+  chantiers: Chantier[];
+  error: Error | null;
+  isError: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  order: Order;
+  orderBy: keyof Chantier;
+  page: number;
+  rowsPerPage: number;
   selectedChantier?: Chantier;
-  setSelectedChantier: (chantier: Chantier) => void;
+  setRowsPerPage: (rowsPerPage: number) => void;
+  setOrder: (order: Order) => void;
+  setOrderBy: (orderBy: keyof Chantier) => void;
+  setPage: (page: number) => void;
+  setSelectedChantier: (chantier?: Chantier) => void;
+  total: number;
 }
 
-function ChantierTable({ selectedChantier, setSelectedChantier }: Props) {
-  const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<keyof Chantier>('date');
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const params: PaginateParameters = {
-    page,
-    limit: rowsPerPage,
-    sortBy: orderBy,
-    sortOrder: order
-  };
-  const { data, error, isError, isFetching, isSuccess, refetch } = useQuery<
-    ChantiersAndTotal,
-    Error
-  >({
-    queryKey: ['getChantiers', params],
-    queryFn: async () => await getChantiers(params),
-    enabled: false,
-    keepPreviousData: true
-  });
-  const chantiers = data?.chantiers ?? [];
-  const total = data?.total ?? Infinity;
-
-  useEffect(() => {
-    void refetch();
-  }, [order, orderBy, page, rowsPerPage, refetch]);
-
+function ChantierTable({
+  chantiers,
+  error,
+  isError,
+  isFetching,
+  isSuccess,
+  order,
+  orderBy,
+  page,
+  rowsPerPage,
+  selectedChantier,
+  setOrder,
+  setOrderBy,
+  setPage,
+  setRowsPerPage,
+  setSelectedChantier,
+  total
+}: Props) {
   const handleRequestSort = (event: MouseEvent<unknown>, property: keyof Chantier) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -60,7 +62,11 @@ function ChantierTable({ selectedChantier, setSelectedChantier }: Props) {
   };
 
   const handleRowClick = (event: MouseEvent<unknown>, clickedChantier: Chantier) => {
-    setSelectedChantier(clickedChantier);
+    if (isSelected(clickedChantier._id)) {
+      setSelectedChantier();
+    } else {
+      setSelectedChantier(clickedChantier);
+    }
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -98,7 +104,7 @@ function ChantierTable({ selectedChantier, setSelectedChantier }: Props) {
           </Box>
         </Box>
       )}
-      {isError && <Alert severity="error">{error.message}</Alert>}
+      {isError && <Alert severity="error">{error?.message}</Alert>}
       {chantiers.length > 0 && isSuccess && (
         <>
           <TableContainer sx={{ position: 'relative' }}>

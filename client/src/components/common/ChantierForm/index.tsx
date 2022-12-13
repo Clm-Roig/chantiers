@@ -6,9 +6,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField,
-  Typography,
-  Stack
+  TextField
 } from '@mui/material';
 import SuccessErrorAlert from '../SuccessErrorAlert';
 import { Box } from '@mui/system';
@@ -16,20 +14,34 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useMutation } from 'react-query';
-import createChantier from '../../api/createChantier';
-import Chantier from '../../models/Chantier';
-import ChantierType from '../../models/ChantierType';
+import createChantier from '../../../api/createChantier';
+import Chantier from '../../../models/Chantier';
+import ChantierType from '../../../models/ChantierType';
+import editChantier from '../../../api/editChantier';
 
-const defaultValues: Omit<Chantier, '_id'> = {
+type ChantierFormDefaultValues = Omit<Chantier, '_id'>;
+
+const emptyChantier: ChantierFormDefaultValues = {
   description: '',
   name: '',
   date: new Date(),
   type: ChantierType.Type1
 };
 
-function CreateChantierForm() {
-  const { control, handleSubmit, reset } = useForm<Chantier>({
-    defaultValues
+interface Props {
+  defaultValues?: ChantierFormDefaultValues;
+  onSuccess?: () => void;
+}
+
+function ChantierForm({ defaultValues, onSuccess }: Props) {
+  const isEditing = !!defaultValues;
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty }
+  } = useForm<Chantier>({
+    defaultValues: isEditing ? defaultValues : emptyChantier
   });
 
   const {
@@ -38,24 +50,31 @@ function CreateChantierForm() {
     isLoading,
     isSuccess,
     isError,
-    mutate: doCreateChantier
-  } = useMutation<string, Error, Chantier>(['createChantier'], createChantier);
+    mutate
+  } = useMutation<string, Error, Chantier>(
+    [isEditing ? 'editChantier' : 'createChantier'],
+    isEditing ? editChantier : createChantier
+  );
 
   useEffect(() => {
     if (isSuccess) {
-      reset();
+      resetForm();
+      if (onSuccess) onSuccess();
     }
   }, [isSuccess]);
 
-  const onSubmit = (data: any) => {
-    doCreateChantier(data);
+  useEffect(() => {
+    resetForm();
+  }, [defaultValues]);
+
+  const onSubmit = (data: Chantier) => {
+    mutate(data);
   };
 
-  const onReset = () => reset();
+  const resetForm = () => reset(isEditing ? defaultValues : emptyChantier);
 
   return (
-    <Stack spacing={2}>
-      <Typography variant="h2">Créer un chantier</Typography>
+    <>
       <form>
         <Box display="flex" width="100%" gap={2} flexWrap="wrap" justifyContent="center">
           <Controller
@@ -138,10 +157,13 @@ function CreateChantierForm() {
             )}
           />
           <Box display="flex" gap={1} flexDirection="row" alignItems="center">
-            <Button type="submit" disabled={isLoading} onClick={handleSubmit(onSubmit)}>
-              Créer
+            <Button
+              type="submit"
+              disabled={isLoading || (isEditing && !isDirty)}
+              onClick={handleSubmit(onSubmit)}>
+              {isEditing ? 'Éditer' : 'Créer'}
             </Button>
-            <Button disabled={isLoading} onClick={onReset} variant={'outlined'}>
+            <Button disabled={isLoading} onClick={resetForm} variant={'outlined'}>
               Réinitialiser
             </Button>
             {isLoading && <CircularProgress size={30} />}
@@ -155,8 +177,8 @@ function CreateChantierForm() {
         successMessage={successMessage}
         errorMessage={error?.message}
       />
-    </Stack>
+    </>
   );
 }
 
-export default CreateChantierForm;
+export default ChantierForm;

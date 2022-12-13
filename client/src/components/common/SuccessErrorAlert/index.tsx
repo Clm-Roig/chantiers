@@ -9,7 +9,7 @@ interface Props {
   errorMessage?: string;
 }
 
-function CreateChantierForm({ isSuccess, isError, successMessage, errorMessage }: Props) {
+function SuccessErrorAlert({ isSuccess, isError, successMessage, errorMessage }: Props) {
   const [displayAlert, setDisplayAlert] = useState(true);
 
   // Display alert if something changes
@@ -39,4 +39,4 @@ function CreateChantierForm({ isSuccess, isError, successMessage, errorMessage }
   );
 }
 
-export default CreateChantierForm;
+export default SuccessErrorAlert;
