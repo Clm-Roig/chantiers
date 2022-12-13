@@ -13,9 +13,15 @@ export const getErrorMessage = (error: AxiosError | Error): string => {
     if (error.response !== undefined) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      console.log(error.response.data);
-      console.log(error.response.status);
-      message = 'A server error occured.';
+      const {
+        response: { status }
+      } = error;
+      if (status >= 400 && status < 500) {
+        message = 'Something went wrong with your request.';
+      }
+      if (status > 500) {
+        message = 'A server error occured.';
+      }
     } else if (error.request !== null) {
       // The request was made but no response was received
       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
