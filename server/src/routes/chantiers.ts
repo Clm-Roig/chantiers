@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
+import { body, validationResult } from 'express-validator';
 const router = Router();
 import {
   getChantiers,
@@ -7,14 +8,27 @@ import {
   updateChantier,
   deleteChantier
 } from '../controllers/chantiers';
+import validateParams from '../helpers/validateParams';
 
 router.get('/', getChantiers);
 
 router.get('/:chantierId', getChantier);
 
-router.post('/', createChantier);
+router.post(
+  '/',
+  body('date').isDate(),
+  body('name').notEmpty().isString(),
+  validateParams,
+  createChantier
+);
 
-router.put('/:chantierId', updateChantier);
+router.put(
+  '/:chantierId',
+  body('date').isDate(),
+  body('name').notEmpty().isString(),
+  validateParams,
+  updateChantier
+);
 
 router.delete('/:chantierId', deleteChantier);
 
