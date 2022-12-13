@@ -1,21 +1,20 @@
 import { MouseEvent, ChangeEvent } from 'react';
 import {
-  Box,
   CircularProgress,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TablePagination,
-  TableRow
+  TableRow as MuiTableRow
 } from '@mui/material';
+import TableRow from './TableRow';
 import TableHead from './TableHead';
 import Chantier from '../../../models/Chantier';
 import Alert from '@mui/material/Alert';
-import Skeleton from '@mui/material/Skeleton';
-import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { Order, TableControls } from '../../../hooks/useTableControls';
+import TableSkeleton from './TableSkeleton';
 
 interface Props extends TableControls<Chantier> {
   chantiers: Chantier[];
@@ -77,23 +76,13 @@ function ChantierTable({
       <Typography variant="h2" id="tableTitle">
         Tous mes chantiers
       </Typography>
-      {/* Handle loading and error */}
-      {chantiers.length === 0 && isSuccess && <Alert severity="info">No chantiers found</Alert>}
-      {isFetching && chantiers.length === 0 && (
-        <Box>
-          <Skeleton width="100%" height="50px" />
-          <Divider />
-          <Skeleton width="100%" height="50px" />
-          <Skeleton width="100%" height="50px" />
-          <Skeleton width="100%" height="50px" />
-          <Skeleton width="100%" height="50px" />
-          <Box display="flex" justifyContent="space-between">
-            <Box flex={1} />
-            <Skeleton sx={{ flex: 1 }} height="50px" />
-          </Box>
-        </Box>
-      )}
+
+      {/* ===== Handle loading and error ===== */}
+      {chantiers.length === 0 && isSuccess && <Alert severity="info">Aucun chantier trouvé</Alert>}
+      {isFetching && chantiers.length === 0 && <TableSkeleton />}
       {isError && <Alert severity="error">{error?.message}</Alert>}
+      {/* ===== End loading and error handling ===== */}
+
       {chantiers.length > 0 && isSuccess && (
         <>
           <TableContainer sx={{ position: 'relative' }}>
@@ -109,31 +98,19 @@ function ChantierTable({
               <TableBody>
                 {chantiers.map((chantier) => (
                   <TableRow
-                    hover
-                    sx={{
-                      '&:hover': {
-                        cursor: 'pointer'
-                      }
-                    }}
-                    onClick={(event) => handleRowClick(event, chantier)}
-                    role="checkbox"
-                    aria-checked={isSelected(chantier._id)}
-                    tabIndex={-1}
                     key={chantier._id}
-                    selected={isSelected(chantier._id)}>
-                    <TableCell>{chantier.name}</TableCell>
-                    <TableCell>{chantier.description}</TableCell>
-                    <TableCell>{new Date(chantier.date).toLocaleDateString()}</TableCell>
-                    <TableCell>{chantier.type}</TableCell>
-                  </TableRow>
+                    chantier={chantier}
+                    isSelected={isSelected}
+                    handleRowClick={handleRowClick}
+                  />
                 ))}
                 {emptyRows > 0 && (
-                  <TableRow
+                  <MuiTableRow
                     style={{
                       height: 53 * emptyRows
                     }}>
                     <TableCell colSpan={6} />
-                  </TableRow>
+                  </MuiTableRow>
                 )}
               </TableBody>
             </Table>

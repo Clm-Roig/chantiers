@@ -41,9 +41,6 @@ function Chantiers() {
     keepPreviousData: true
   });
 
-  const chantiers = data?.chantiers ?? [];
-  const total = data?.total ?? Infinity;
-
   // Refetch data when a control changes
   useEffect(() => {
     void refetch();
@@ -64,6 +61,9 @@ function Chantiers() {
   const onCreateSuccess = () => {
     void refetch();
   };
+
+  const chantiers = data?.chantiers ?? [];
+  const total = data?.total ?? Infinity;
 
   return (
     <>

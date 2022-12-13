@@ -15,7 +15,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { SnackbarKey, SnackbarProvider } from 'notistack';
 import IconButton from '@mui/material/IconButton/IconButton';
 import { frFR } from '@mui/material/locale';
-
+import { fr } from 'date-fns/locale';
 const queryClient = new QueryClient();
 
 let theme = createTheme(
@@ -57,7 +57,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
         <QueryClientProvider client={queryClient}>
           <SnackbarProvider
             anchorOrigin={{
