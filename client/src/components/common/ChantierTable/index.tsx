@@ -78,13 +78,19 @@ function ChantierTable({
       <Typography variant="h2" id="tableTitle">
         Tous mes chantiers
       </Typography>
-      <Box display="flex" gap={1} alignItems="center">
-        <InfoIcon />
-        <Typography variant="subtitle1">{"Cliquer sur une ligne pour l'éditer"}</Typography>
-      </Box>
+      {chantiers.length > 0 && (
+        <Box display="flex" gap={1} alignItems="center">
+          <InfoIcon />
+          <Typography variant="subtitle1">{"Cliquer sur une ligne pour l'éditer"}</Typography>
+        </Box>
+      )}
 
       {/* ===== Handle loading and error ===== */}
-      {chantiers.length === 0 && isSuccess && <Alert severity="info">Aucun chantier trouvé</Alert>}
+      {chantiers.length === 0 && isSuccess && !isFetching && (
+        <Alert severity="info" sx={{ mt: 1 }}>
+          Aucun chantier trouvé
+        </Alert>
+      )}
       {isFetching && chantiers.length === 0 && <TableSkeleton />}
       {isError && <Alert severity="error">{error?.message}</Alert>}
       {/* ===== End loading and error handling ===== */}
