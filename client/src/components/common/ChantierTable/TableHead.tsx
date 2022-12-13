@@ -2,8 +2,7 @@ import { Box, TableHead as MuiTableHead, TableCell, TableRow, TableSortLabel } f
 import { MouseEvent } from 'react';
 import { visuallyHidden } from '@mui/utils';
 import Chantier from '../../../models/Chantier';
-
-type Order = 'asc' | 'desc';
+import { Order } from '../../../hooks/useTableControls';
 
 interface HeadCell {
   id: keyof Chantier;
@@ -31,7 +30,7 @@ const headCells: readonly HeadCell[] = [
 interface Props {
   onRequestSort: (event: MouseEvent<unknown>, property: keyof Chantier) => void;
   order: Order;
-  orderBy: string;
+  orderBy?: string;
 }
 
 function TableHead({ order, orderBy, onRequestSort }: Props) {
@@ -54,7 +53,7 @@ function TableHead({ order, orderBy, onRequestSort }: Props) {
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order === Order.DESC ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null}
             </TableSortLabel>

@@ -67,6 +67,7 @@ function ChantierForm({ defaultValues, onSuccess }: Props) {
     }
   }, [isSuccess, isError, successMessage, error]);
 
+  // Reset on success
   useEffect(() => {
     if (isSuccess) {
       resetForm();
@@ -74,6 +75,7 @@ function ChantierForm({ defaultValues, onSuccess }: Props) {
     }
   }, [isSuccess]);
 
+  // Reset on defaultValues change
   useEffect(() => {
     resetForm();
   }, [defaultValues]);

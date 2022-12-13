@@ -26,6 +26,7 @@ function EditChantier({ chantier, onEditSuccess, onDeleteSuccess, unselectChanti
     mutate: doDelete
   } = useMutation<string, Error, Chantier>(['deleteChantier'], deleteChantier);
 
+  // Success / Error snackbars and callbacks
   useEffect(() => {
     if (isSuccess) {
       enqueueSnackbar(successMessage, { variant: 'success' });
@@ -41,6 +42,7 @@ function EditChantier({ chantier, onEditSuccess, onDeleteSuccess, unselectChanti
   const handleOnDelete = () => {
     doDelete(chantier);
   };
+
   return (
     <Stack spacing={2}>
       <Box display="flex" justifyContent="space-between" alignItems="center">

@@ -15,25 +15,14 @@ import Alert from '@mui/material/Alert';
 import Skeleton from '@mui/material/Skeleton';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import { Order, TableControls } from '../../../hooks/useTableControls';
 
-export type Order = 'asc' | 'desc';
-
-interface Props {
+interface Props extends TableControls<Chantier> {
   chantiers: Chantier[];
   error: Error | null;
   isError: boolean;
   isFetching: boolean;
   isSuccess: boolean;
-  order: Order;
-  orderBy: keyof Chantier;
-  page: number;
-  rowsPerPage: number;
-  selectedChantier?: Chantier;
-  setRowsPerPage: (rowsPerPage: number) => void;
-  setOrder: (order: Order) => void;
-  setOrderBy: (orderBy: keyof Chantier) => void;
-  setPage: (page: number) => void;
-  setSelectedChantier: (chantier?: Chantier) => void;
   total: number;
 }
 
@@ -47,25 +36,25 @@ function ChantierTable({
   orderBy,
   page,
   rowsPerPage,
-  selectedChantier,
+  selected,
   setOrder,
   setOrderBy,
   setPage,
   setRowsPerPage,
-  setSelectedChantier,
+  setSelected,
   total
 }: Props) {
   const handleRequestSort = (event: MouseEvent<unknown>, property: keyof Chantier) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === Order.ASC;
+    setOrder(isAsc ? Order.DESC : Order.ASC);
     setOrderBy(property);
   };
 
   const handleRowClick = (event: MouseEvent<unknown>, clickedChantier: Chantier) => {
     if (isSelected(clickedChantier._id)) {
-      setSelectedChantier();
+      setSelected();
     } else {
-      setSelectedChantier(clickedChantier);
+      setSelected(clickedChantier);
     }
   };
 
@@ -78,7 +67,7 @@ function ChantierTable({
     setPage(0);
   };
 
-  const isSelected = (id: string) => selectedChantier?._id === id;
+  const isSelected = (id: string) => selected?._id === id;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - total) : 0;

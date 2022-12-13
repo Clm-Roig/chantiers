@@ -1,25 +1,36 @@
 import { Divider, Fade } from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useQuery } from 'react-query';
 import getChantiers, { ChantiersAndTotal, PaginateParameters } from '../../api/getChantiers';
 import Chantier from '../../models/Chantier';
-import ChantierTable, { Order } from '../common/ChantierTable';
+import ChantierTable from '../common/ChantierTable';
 import CreateChantier from '../CreateChantier';
 import EditChantier from '../EditChantier';
+import useTableControls from '../../hooks/useTableControls';
+
+const DEFAULT_ORDER_BY = 'date';
 
 function Chantiers() {
   const editBlocRef = useRef<HTMLDivElement>(null);
-  const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<keyof Chantier>('date');
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const {
+    order,
+    orderBy,
+    page,
+    rowsPerPage,
+    selected,
+    setOrder,
+    setOrderBy,
+    setPage,
+    setRowsPerPage,
+    setSelected
+  } = useTableControls<Chantier>();
+
   const params: PaginateParameters = {
     page,
     limit: rowsPerPage,
-    sortBy: orderBy,
+    sortBy: orderBy ?? DEFAULT_ORDER_BY,
     sortOrder: order
   };
-  const [selectedChantier, setSelectedChantier] = useState<Chantier | undefined>();
   const { data, error, isError, isFetching, isSuccess, refetch } = useQuery<
     ChantiersAndTotal,
     Error
@@ -33,18 +44,20 @@ function Chantiers() {
   const chantiers = data?.chantiers ?? [];
   const total = data?.total ?? Infinity;
 
+  // Refetch data when a control changes
   useEffect(() => {
     void refetch();
   }, [order, orderBy, page, rowsPerPage, refetch]);
 
+  // Scroll to selected chantier when it appears
   useEffect(() => {
-    if (selectedChantier) {
+    if (selected) {
       editBlocRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [selectedChantier]);
+  }, [selected]);
 
   const onEditOrDeleteSuccess = () => {
-    setSelectedChantier(undefined);
+    setSelected(undefined);
     void refetch();
   };
 
@@ -61,26 +74,26 @@ function Chantiers() {
         isFetching={isFetching}
         isSuccess={isSuccess}
         order={order}
-        orderBy={orderBy}
+        orderBy={orderBy ?? DEFAULT_ORDER_BY}
         rowsPerPage={rowsPerPage}
         page={page}
-        selectedChantier={selectedChantier}
+        selected={selected}
         setOrder={setOrder}
         setOrderBy={setOrderBy}
         setPage={setPage}
         setRowsPerPage={setRowsPerPage}
-        setSelectedChantier={setSelectedChantier}
+        setSelected={setSelected}
         total={total}
       />
       <div ref={editBlocRef}>
-        <Fade in={!!selectedChantier} timeout={1000}>
+        <Fade in={!!selected} timeout={1000}>
           <div>
-            {selectedChantier && (
+            {selected && (
               <EditChantier
-                chantier={selectedChantier}
+                chantier={selected}
                 onEditSuccess={onEditOrDeleteSuccess}
                 onDeleteSuccess={onEditOrDeleteSuccess}
-                unselectChantier={() => setSelectedChantier(undefined)}
+                unselectChantier={() => setSelected(undefined)}
               />
             )}
           </div>
