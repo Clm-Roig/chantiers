@@ -8,9 +8,9 @@ import {
   Select,
   TextField,
   Typography,
-  Alert,
   Stack
 } from '@mui/material';
+import SuccessErrorAlert from '../SuccessErrorAlert';
 import { Box } from '@mui/system';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useEffect } from 'react';
@@ -32,7 +32,14 @@ function CreateChantierForm() {
     defaultValues
   });
 
-  const { isLoading, isSuccess, mutate: doCreateChantier } = useMutation(createChantier);
+  const {
+    data: successMessage,
+    error,
+    isLoading,
+    isSuccess,
+    isError,
+    mutate: doCreateChantier
+  } = useMutation<string, Error, Chantier>(['createchantier'], createChantier);
 
   useEffect(() => {
     if (isSuccess) {
@@ -41,7 +48,7 @@ function CreateChantierForm() {
   }, [isSuccess]);
 
   const onSubmit = (data: any) => {
-    doCreateChantier(data as Chantier);
+    doCreateChantier(data);
   };
 
   const onReset = () => reset();
@@ -49,9 +56,6 @@ function CreateChantierForm() {
   return (
     <Stack spacing={2}>
       <Typography variant="h2">Créer un chantier</Typography>
-
-      {isSuccess && <Alert severity="success">Chantier créé !</Alert>}
-
       <form>
         <Box display="flex" width="100%" gap={2} flexWrap="wrap" justifyContent="center">
           <Controller
@@ -133,22 +137,24 @@ function CreateChantierForm() {
               />
             )}
           />
-          <Box>
-            {isLoading ? (
-              <CircularProgress />
-            ) : (
-              <>
-                <Button disabled={isLoading} onClick={handleSubmit(onSubmit)}>
-                  Créer
-                </Button>
-                <Button disabled={isLoading} onClick={onReset} variant={'outlined'}>
-                  Réinitialiser
-                </Button>
-              </>
-            )}
+          <Box display="flex" gap={1} flexDirection="row" alignItems="center">
+            <Button type="submit" disabled={isLoading} onClick={handleSubmit(onSubmit)}>
+              Créer
+            </Button>
+            <Button disabled={isLoading} onClick={onReset} variant={'outlined'}>
+              Réinitialiser
+            </Button>
+            {isLoading && <CircularProgress size={30} />}
           </Box>
         </Box>
       </form>
+
+      <SuccessErrorAlert
+        isSuccess={isSuccess}
+        isError={isError}
+        successMessage={successMessage}
+        errorMessage={error?.message}
+      />
     </Stack>
   );
 }

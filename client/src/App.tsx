@@ -1,4 +1,5 @@
-import { Box, Card, CardContent, Typography, Container } from '@mui/material';
+import { Box, Card, CardContent, Divider, Typography, Container } from '@mui/material';
+import ChantierTable from './components/ChantierTable';
 import CreateChantierForm from './components/CreateChantierForm';
 function App() {
   return (
@@ -10,6 +11,8 @@ function App() {
         <Card>
           <CardContent>
             <CreateChantierForm />
+            <Divider sx={{ my: 2 }} />
+            <ChantierTable />
           </CardContent>
         </Card>
       </Box>

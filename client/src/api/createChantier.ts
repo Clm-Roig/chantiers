@@ -1,17 +1,18 @@
-import axios from './axios';
+import api, { getErrorMessage } from './axios';
 import Chantier from '../models/Chantier';
+import { AxiosError } from 'axios';
 
-const createChantier = async (data: Chantier): Promise<Number> => {
+/**
+ * @param {Chantier} data
+ * @returns {string} a success message
+ * @throws {Error}
+ */
+const createChantier = async (data: Chantier): Promise<string> => {
   try {
-    const res = await axios.post('/chantiers', data);
-    return res.status;
+    await api.post('/chantiers', data);
+    return 'Chantier créé';
   } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    } else {
-      throw new Error('An unexpected error occured');
-    }
+    throw new Error(getErrorMessage(error as AxiosError | Error));
   }
 };
 
