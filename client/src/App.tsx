@@ -4,7 +4,7 @@ import Chantiers from './components/Chantiers';
 function App() {
   return (
     <Container>
-      <Box m={2}>
+      <Box m={1}>
         <Typography variant="h1" textAlign="center" py={2}>
           MES CHANTIERS
         </Typography>

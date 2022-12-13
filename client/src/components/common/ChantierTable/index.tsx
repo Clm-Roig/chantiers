@@ -1,5 +1,6 @@
 import { MouseEvent, ChangeEvent } from 'react';
 import {
+  Box,
   CircularProgress,
   Table,
   TableBody,
@@ -8,6 +9,7 @@ import {
   TablePagination,
   TableRow as MuiTableRow
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import TableRow from './TableRow';
 import TableHead from './TableHead';
 import Chantier from '../../../models/Chantier';
@@ -76,6 +78,10 @@ function ChantierTable({
       <Typography variant="h2" id="tableTitle">
         Tous mes chantiers
       </Typography>
+      <Box display="flex" gap={1} alignItems="center">
+        <InfoIcon />
+        <Typography variant="subtitle1">{"Cliquer sur une ligne pour l'éditer"}</Typography>
+      </Box>
 
       {/* ===== Handle loading and error ===== */}
       {chantiers.length === 0 && isSuccess && <Alert severity="info">Aucun chantier trouvé</Alert>}

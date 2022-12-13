@@ -25,22 +25,13 @@ let theme = createTheme(
     },
     typography: {
       h1: {
-        fontSize: '3.3rem'
+        fontSize: '3rem'
       },
       h2: {
-        fontSize: '2.6em'
+        fontSize: '2.2em'
       },
       h3: {
-        fontSize: '2.3rem'
-      },
-      h4: {
-        fontSize: '2rem'
-      },
-      h5: {
-        fontSize: '1.7rem'
-      },
-      h6: {
-        fontSize: '1.4rem'
+        fontSize: '1.8rem'
       }
     }
   },
@@ -64,6 +55,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
               vertical: 'top',
               horizontal: 'center'
             }}
+            autoHideDuration={5000}
             dense
             maxSnack={3}
             ref={notistackRef}
