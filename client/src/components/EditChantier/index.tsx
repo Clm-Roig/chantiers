@@ -1,4 +1,5 @@
 import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Chantier from '../../models/Chantier';
 import ChantierForm from '../common/ChantierForm';
@@ -11,9 +12,10 @@ interface Props {
   chantier: Chantier;
   onEditSuccess?: () => void;
   onDeleteSuccess?: () => void;
+  unselectChantier: () => void;
 }
 
-function EditChantier({ chantier, onEditSuccess, onDeleteSuccess }: Props) {
+function EditChantier({ chantier, onEditSuccess, onDeleteSuccess, unselectChantier }: Props) {
   const { enqueueSnackbar } = useSnackbar();
   const {
     data: successMessage,
@@ -52,6 +54,11 @@ function EditChantier({ chantier, onEditSuccess, onDeleteSuccess }: Props) {
           startIcon={isLoading ? <CircularProgress color="error" size={20} /> : <DeleteIcon />}
           onClick={handleOnDelete}>
           Supprimer
+        </Button>
+      </Box>
+      <Box>
+        <Button variant="text" onClick={unselectChantier} startIcon={<RestartAltIcon />}>
+          Désélectionner
         </Button>
       </Box>
       <ChantierForm defaultValues={chantier} onSuccess={onEditSuccess} />

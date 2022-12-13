@@ -14,34 +14,38 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import CssBaseline from '@mui/material/CssBaseline';
 import { SnackbarKey, SnackbarProvider } from 'notistack';
 import IconButton from '@mui/material/IconButton/IconButton';
+import { frFR } from '@mui/material/locale';
 
 const queryClient = new QueryClient();
 
-let theme = createTheme({
-  palette: {
-    mode: 'dark'
-  },
-  typography: {
-    h1: {
-      fontSize: '3.3rem'
+let theme = createTheme(
+  {
+    palette: {
+      mode: 'dark'
     },
-    h2: {
-      fontSize: '2.6em'
-    },
-    h3: {
-      fontSize: '2.3rem'
-    },
-    h4: {
-      fontSize: '2rem'
-    },
-    h5: {
-      fontSize: '1.7rem'
-    },
-    h6: {
-      fontSize: '1.4rem'
+    typography: {
+      h1: {
+        fontSize: '3.3rem'
+      },
+      h2: {
+        fontSize: '2.6em'
+      },
+      h3: {
+        fontSize: '2.3rem'
+      },
+      h4: {
+        fontSize: '2rem'
+      },
+      h5: {
+        fontSize: '1.7rem'
+      },
+      h6: {
+        fontSize: '1.4rem'
+      }
     }
-  }
-});
+  },
+  frFR
+);
 theme = responsiveFontSizes(theme);
 
 const notistackRef = createRef<SnackbarProvider>();

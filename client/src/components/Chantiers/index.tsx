@@ -1,5 +1,5 @@
-import Divider from '@mui/material/Divider';
-import { useState, useEffect } from 'react';
+import { Divider, Fade } from '@mui/material';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery } from 'react-query';
 import getChantiers, { ChantiersAndTotal, PaginateParameters } from '../../api/getChantiers';
 import Chantier from '../../models/Chantier';
@@ -8,6 +8,7 @@ import CreateChantier from '../CreateChantier';
 import EditChantier from '../EditChantier';
 
 function Chantiers() {
+  const editBlocRef = useRef<HTMLDivElement>(null);
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof Chantier>('date');
   const [page, setPage] = useState(0);
@@ -35,6 +36,12 @@ function Chantiers() {
   useEffect(() => {
     void refetch();
   }, [order, orderBy, page, rowsPerPage, refetch]);
+
+  useEffect(() => {
+    if (selectedChantier) {
+      editBlocRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedChantier]);
 
   const onEditOrDeleteSuccess = () => {
     setSelectedChantier(undefined);
@@ -65,13 +72,20 @@ function Chantiers() {
         setSelectedChantier={setSelectedChantier}
         total={total}
       />
-      {selectedChantier && (
-        <EditChantier
-          chantier={selectedChantier}
-          onEditSuccess={onEditOrDeleteSuccess}
-          onDeleteSuccess={onEditOrDeleteSuccess}
-        />
-      )}
+      <div ref={editBlocRef}>
+        <Fade in={!!selectedChantier} timeout={1000}>
+          <div>
+            {selectedChantier && (
+              <EditChantier
+                chantier={selectedChantier}
+                onEditSuccess={onEditOrDeleteSuccess}
+                onDeleteSuccess={onEditOrDeleteSuccess}
+                unselectChantier={() => setSelectedChantier(undefined)}
+              />
+            )}
+          </div>
+        </Fade>
+      </div>
       <Divider sx={{ my: 2 }} />
 
       <CreateChantier onCreateSuccess={onCreateSuccess} />

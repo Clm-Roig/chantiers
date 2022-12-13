@@ -118,28 +118,26 @@ function ChantierTable({
               <TableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
 
               <TableBody>
-                {chantiers
-                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((chantier) => (
-                    <TableRow
-                      hover
-                      sx={{
-                        '&:hover': {
-                          cursor: 'pointer'
-                        }
-                      }}
-                      onClick={(event) => handleRowClick(event, chantier)}
-                      role="checkbox"
-                      aria-checked={isSelected(chantier._id)}
-                      tabIndex={-1}
-                      key={chantier._id}
-                      selected={isSelected(chantier._id)}>
-                      <TableCell>{chantier.name}</TableCell>
-                      <TableCell>{chantier.description}</TableCell>
-                      <TableCell>{chantier.date.toString()}</TableCell>
-                      <TableCell>{chantier.type}</TableCell>
-                    </TableRow>
-                  ))}
+                {chantiers.map((chantier) => (
+                  <TableRow
+                    hover
+                    sx={{
+                      '&:hover': {
+                        cursor: 'pointer'
+                      }
+                    }}
+                    onClick={(event) => handleRowClick(event, chantier)}
+                    role="checkbox"
+                    aria-checked={isSelected(chantier._id)}
+                    tabIndex={-1}
+                    key={chantier._id}
+                    selected={isSelected(chantier._id)}>
+                    <TableCell>{chantier.name}</TableCell>
+                    <TableCell>{chantier.description}</TableCell>
+                    <TableCell>{new Date(chantier.date).toLocaleDateString()}</TableCell>
+                    <TableCell>{chantier.type}</TableCell>
+                  </TableRow>
+                ))}
                 {emptyRows > 0 && (
                   <TableRow
                     style={{
