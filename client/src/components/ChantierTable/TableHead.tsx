@@ -8,59 +8,36 @@ import {
 } from '@mui/material';
 import { ChangeEvent, MouseEvent } from 'react';
 import { visuallyHidden } from '@mui/utils';
-
-interface Data {
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
-}
+import Chantier from '../../models/Chantier';
 
 type Order = 'asc' | 'desc';
 
 interface HeadCell {
-  disablePadding: boolean;
-  id: keyof Data;
+  id: keyof Chantier;
   label: string;
-  numeric: boolean;
 }
 const headCells: readonly HeadCell[] = [
   {
     id: 'name',
-    numeric: false,
-    disablePadding: true,
-    label: 'Dessert (100g serving)'
+    label: 'Name'
   },
   {
-    id: 'calories',
-    numeric: true,
-    disablePadding: false,
-    label: 'Calories'
+    id: 'description',
+    label: 'Description'
   },
   {
-    id: 'fat',
-    numeric: true,
-    disablePadding: false,
-    label: 'Fat (g)'
+    id: 'date',
+    label: 'Date'
   },
   {
-    id: 'carbs',
-    numeric: true,
-    disablePadding: false,
-    label: 'Carbs (g)'
-  },
-  {
-    id: 'protein',
-    numeric: true,
-    disablePadding: false,
-    label: 'Protein (g)'
+    id: 'type',
+    label: 'Type'
   }
 ];
 
 interface Props {
   numSelected: number;
-  onRequestSort: (event: MouseEvent<unknown>, property: keyof Data) => void;
+  onRequestSort: (event: MouseEvent<unknown>, property: keyof Chantier) => void;
   onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
@@ -69,7 +46,7 @@ interface Props {
 
 function TableHead(props: Props) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property: keyof Data) => (event: MouseEvent<unknown>) => {
+  const createSortHandler = (property: keyof Chantier) => (event: MouseEvent<unknown>) => {
     onRequestSort(event, property);
   };
 
@@ -90,9 +67,8 @@ function TableHead(props: Props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}>
+            sortDirection={orderBy === headCell.id ? order : false}
+            align="center">
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}

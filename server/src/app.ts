@@ -9,14 +9,15 @@ const app = express();
 
 // ========== APP config
 const corsOptions = {
-  origin: 'http://127.0.0.1:5173'
+  origin: 'http://127.0.0.1:5173',
+  exposedHeaders: '*'
 };
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 // Simulate slow traffic
 app.use(function (req, res, next) {
-  setTimeout(next, 1500);
+  setTimeout(next, 1000);
 });
 
 // ========== ROUTES

@@ -4,9 +4,13 @@ import Chantier from '../models/Chantier';
 const MAX_LIMIT = 100;
 
 export const getChantiers = async (req: Request, res: Response) => {
-  const sortString = `${req.params.sortOrder === 'asc' ? '' : '-'}${req.params.sortBy}}`;
-  const page = Number(req.params.page) || 0;
-  const limit = Math.min(MAX_LIMIT, Number(req.params.limit)) || 20;
+  const sortBy = Object.keys(Chantier.schema.paths).includes(req.query.sortBy as string)
+    ? req.query.sortBy
+    : 'date';
+
+  const sortString = `${req.query.sortOrder === 'desc' ? '-' : ''}${sortBy}`;
+  const page = Number(req.query.page) || 0;
+  const limit = Math.min(MAX_LIMIT, Number(req.query.limit)) || 20;
 
   Chantier.find({})
     .limit(limit)
