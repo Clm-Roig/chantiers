@@ -26,7 +26,7 @@ router.get('/:chantierId', getChantier);
 
 router.post(
   '/',
-  body('date').isDate(),
+  body('date').isISO8601(),
   body('name').notEmpty().isString(),
   validateParams,
   createChantier
@@ -34,7 +34,7 @@ router.post(
 
 router.put(
   '/:chantierId',
-  body('date').isDate(),
+  body('date').isISO8601(),
   body('name').notEmpty().isString(),
   validateParams,
   updateChantier
