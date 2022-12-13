@@ -169,17 +169,17 @@ function ChantierForm({ defaultValues, onSuccess }: Props) {
               />
             )}
           />
-          <Box display="flex" gap={1} flexDirection="row" alignItems="center">
+          <Box display="flex" gap={1} flexDirection="row">
             <Button
               type="submit"
               disabled={isLoading || (isEditing && !isDirty)}
+              startIcon={isLoading && <CircularProgress size={25} />}
               onClick={handleSubmit(onSubmit)}>
               {isEditing ? 'Éditer' : 'Créer'}
             </Button>
-            <Button disabled={isLoading} onClick={resetForm} variant={'outlined'}>
+            <Button disabled={isLoading || !isDirty} onClick={resetForm} variant={'outlined'}>
               Réinitialiser
             </Button>
-            {isLoading && <CircularProgress size={30} />}
           </Box>
         </Box>
       </form>
